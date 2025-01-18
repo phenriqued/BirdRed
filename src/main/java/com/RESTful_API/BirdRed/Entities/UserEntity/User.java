@@ -1,21 +1,18 @@
 package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Data
 @Document(collection = "User")
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
