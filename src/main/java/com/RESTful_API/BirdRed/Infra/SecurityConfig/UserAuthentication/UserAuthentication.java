@@ -1,11 +1,14 @@
 package com.RESTful_API.BirdRed.Infra.SecurityConfig.UserAuthentication;
 
 
+import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 
 public class UserAuthentication implements UserDetails {
@@ -17,7 +20,8 @@ public class UserAuthentication implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(user.getRole() == UserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
     }
 
     @Override

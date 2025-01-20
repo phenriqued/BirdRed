@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
+import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -10,9 +11,10 @@ import java.time.LocalDateTime;
 
 @Document(collection = "User")
 
-@Getter
+
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Getter
 public class User {
 
     @Id
@@ -27,6 +29,7 @@ public class User {
     private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private UserRoles role;
 
 
 
