@@ -2,7 +2,10 @@ package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,9 +31,15 @@ public class User {
     @Setter
     private String password;
     private LocalDateTime createdAt;
+    @Setter
     private LocalDateTime updatedAt;
     private UserRoles role;
 
-
-
+    public User(String nickname, String email, String password, UserRoles role) {
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.createdAt = LocalDateTime.now();
+        this.role = role;
+    }
 }

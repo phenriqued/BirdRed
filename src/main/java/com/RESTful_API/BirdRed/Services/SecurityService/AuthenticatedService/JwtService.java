@@ -2,7 +2,6 @@ package com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedService;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -15,7 +14,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
 @Service
-
 @AllArgsConstructor
 public class JwtService {
 
@@ -27,7 +25,7 @@ public class JwtService {
         String scope = authentication
                 .getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(""));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("BirdRed")
@@ -41,6 +39,5 @@ public class JwtService {
                 JwtEncoderParameters.from(claims))
                 .getTokenValue();
     }
-
 
 }
