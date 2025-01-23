@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.DTOs.SignUpDTOs;
 
 
+import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Infra.ValidConfig.ValidPassword.PasswordValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ public record SignUpRequestDTO(
     ) {
     public SignUpRequestDTO{
         if(nickname.contains("@"))
-            throw new IllegalArgumentException("the nickname cannot contains \"@\"");
+            throw new ValidationException("the nickname cannot contains \"@\"");
 
     }
 
