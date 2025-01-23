@@ -1,33 +1,26 @@
 package com.RESTful_API.BirdRed.Infra.DataLoader;
 
-import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataLoader implements CommandLineRunner {
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
+public class UserAdminDataLoader implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
 
     @Override
     public void run(String... args) throws Exception {
-        saveRole();
         admin();
-    }
-
-    private void saveRole(){
-        mongoTemplate.save(new Role(1L, "admin"), "Roles");
-        mongoTemplate.save(new Role(2L, "customer"), "Roles");
     }
 
     private void admin(){
@@ -37,10 +30,15 @@ public class DataLoader implements CommandLineRunner {
                     System.out.println("admin on");
                 },
                 () -> {
-                    User admin = new User("admin", "admin@birdRed.com", "admin", UserRoles.ADMIN);
+                    User admin = new User("admin",
+                            "admin@birdRed.com",
+                            passwordEncoder.encode("admin@BirdRed"),
+                            UserRoles.ADMIN);
+
                     userRepository.save(admin);
                 }
         );
     }
+
 
 }
