@@ -2,6 +2,7 @@ package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
 import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpRequestDTO;
+import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,14 +35,14 @@ public class User {
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
-    private UserRoles role;
+    private Role role;
 
-    public User(String nickname, String email, String password, UserRoles role) {
+    public User(String nickname, String email, String password, String roleName) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.createdAt = LocalDateTime.now();
-        this.role = role;
+        this.role = new Role(roleName);
     }
 
     public User(String nickname, String email, String password){
@@ -49,7 +50,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.createdAt = LocalDateTime.now();
-        this.role = UserRoles.CUSTOMER;
+        this.role = new Role("CUSTOMER");
     }
 
 

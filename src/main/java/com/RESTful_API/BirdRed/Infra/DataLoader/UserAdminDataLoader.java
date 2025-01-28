@@ -33,7 +33,7 @@ public class UserAdminDataLoader implements CommandLineRunner {
                     User admin = new User("admin",
                             "admin@birdRed.com",
                             passwordEncoder.encode("admin@BirdRed"),
-                            UserRoles.ADMIN);
+                            "ADMIN");
 
                     userRepository.save(admin);
                 }

@@ -35,7 +35,7 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity signUp(@RequestBody @Valid SignUpRequestDTO requestDTO, UriComponentsBuilder uriBuilder){
-        var basicUser = signUpService.createUser(requestDTO);
+        var basicUser = signUpService.createBasicUser(requestDTO);
         URI uri = uriBuilder.path("/BirdRed/{nickname}").buildAndExpand(basicUser.getNickname()).toUri();
         return ResponseEntity.created(uri).body(basicUser);
     }

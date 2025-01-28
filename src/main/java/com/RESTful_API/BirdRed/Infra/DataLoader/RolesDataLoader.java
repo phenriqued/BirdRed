@@ -21,8 +21,8 @@ public class RolesDataLoader implements CommandLineRunner {
     }
 
     private void saveRole(){
-        mongoTemplate.save(new Role(1L, "admin"), "Roles");
-        mongoTemplate.save(new Role(2L, "customer"), "Roles");
+        mongoTemplate.save(new Role(1L, UserRoles.ADMIN), "Roles");
+        mongoTemplate.save(new Role(2L, UserRoles.CUSTOMER), "Roles");
     }
 
 }

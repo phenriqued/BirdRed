@@ -16,7 +16,7 @@ public class SignUpService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    public User createUser(SignUpRequestDTO requestDTO){
+    public User createBasicUser(SignUpRequestDTO requestDTO){
         return
             userRepository.save(
                     new User(requestDTO.nickname(), requestDTO.email(), encoder.encode(requestDTO.password()))

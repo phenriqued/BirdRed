@@ -4,6 +4,7 @@ import com.RESTful_API.BirdRed.Infra.SecurityConfig.UserAuthentication.UserAuthe
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(identifier.contains("@")){
             return userRepository.findByEmail(identifier).map(UserAuthentication::new)
                     .orElseThrow(
-                            () -> new UsernameNotFoundException("User Not Found with email: " + identifier)
+                            () -> new BadCredentialsException("")
                     );
         }else{
             return userRepository.findByNickname(identifier).map(UserAuthentication::new)
                     .orElseThrow(
-                            () -> new UsernameNotFoundException("User Not Found with nickname: " + identifier)
+                            () -> new BadCredentialsException("")
                     );
         }
     }

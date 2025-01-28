@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 public record SignUpRequestDTO(
         @NotBlank
-        @Size(min = 6, max = 15, message = "The length must be between 6 and 15 characters")
+        @Size(min = 4, max = 15, message = "The length must be between 6 and 15 characters")
         String nickname,
         @NotBlank
         @Email

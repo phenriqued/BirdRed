@@ -9,21 +9,26 @@ import org.springframework.security.core.GrantedAuthority;
 
 @Document(collection = "Roles")
 
-@Data
+@NoArgsConstructor @AllArgsConstructor
+@Getter
+@EqualsAndHashCode(of = "id")
 public class Role implements GrantedAuthority {
 
     @Id
     private Long id;
-    @Setter
-    private String name;
 
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    private UserRoles name;
+
+    public Role(Long id) {
+        this.name = UserRoles.valueOf(id);
+    }
+
+    public Role(String name) {
+        this.name = UserRoles.valueOf(name);
     }
 
     @Override
     public String getAuthority() {
-        return null;
+        return "ROLE_"+this.name;
     }
 }

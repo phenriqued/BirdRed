@@ -13,4 +13,12 @@ public enum UserRoles {
     UserRoles(Long roleId) {
         this.roleId = roleId;
     }
+
+    public static UserRoles valueOf(Long id){
+        if(id == 1L) return ADMIN;
+            else return CUSTOMER;
+    }
+
+
+
 }
