@@ -23,9 +23,6 @@ public class UserAuthentication implements UserDetails {
         return user.getRole().getName() == UserRoles.ADMIN
                 ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CUSTOMER"))
                 : List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-
-//        if(user.getRole() == UserRoles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CUSTOMER"));
-//        else return List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
     }
 
     @Override

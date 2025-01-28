@@ -5,7 +5,7 @@ import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserAdminService {
 
     private UserRepository userRepository;
 

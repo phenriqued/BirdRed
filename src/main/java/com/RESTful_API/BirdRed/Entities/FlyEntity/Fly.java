@@ -10,14 +10,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "Fly")
+
 
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Fly {
 
-    @Id
+
     private String id;
     private String content;
     private User author;

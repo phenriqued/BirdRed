@@ -1,7 +1,9 @@
 package com.RESTful_API.BirdRed.Entities.RoleEntity;
 
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,13 +11,13 @@ import org.springframework.security.core.GrantedAuthority;
 
 @Document(collection = "Roles")
 
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Role implements GrantedAuthority {
 
     @Id
-    private Long id;
+    private String id;
 
     private UserRoles name;
 

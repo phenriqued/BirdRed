@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -35,23 +36,15 @@ public class User {
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
+    @DBRef
     private Role role;
 
-    public User(String nickname, String email, String password, String roleName) {
+    public User(String nickname, String email, String password, Role role) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.createdAt = LocalDateTime.now();
-        this.role = new Role(roleName);
+        this.role = role;
     }
-
-    public User(String nickname, String email, String password){
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
-        this.createdAt = LocalDateTime.now();
-        this.role = new Role("CUSTOMER");
-    }
-
 
 }
