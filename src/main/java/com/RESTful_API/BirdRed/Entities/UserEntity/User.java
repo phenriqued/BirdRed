@@ -1,9 +1,7 @@
 package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
-import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpRequestDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
-import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,9 @@ package com.RESTful_API.BirdRed.Controllers.AuthenticationController;
 
 
 import com.RESTful_API.BirdRed.DTOs.SignInDTOs.SignInRequestDTO;
+import com.RESTful_API.BirdRed.DTOs.SignInDTOs.SignInResponseDTO;
 import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpRequestDTO;
+import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpResponseDTO;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignIn.SignInService;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignUp.SignUpService;
 import jakarta.validation.Valid;
@@ -28,16 +30,20 @@ public class AuthenticationController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity login(@RequestBody @Valid SignInRequestDTO requestDTO){
+    public ResponseEntity<SignInResponseDTO> login(@RequestBody @Valid SignInRequestDTO requestDTO){
         var token = signInService.login(requestDTO);
         return ResponseEntity.ok().body(token);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signUp(@RequestBody @Valid SignUpRequestDTO requestDTO, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<SignUpResponseDTO> signUp(@RequestBody @Valid SignUpRequestDTO requestDTO, UriComponentsBuilder uriBuilder){
         var basicUser = signUpService.createBasicUser(requestDTO);
+
         URI uri = uriBuilder.path("/BirdRed/{nickname}").buildAndExpand(basicUser.getNickname()).toUri();
-        return ResponseEntity.created(uri).body(basicUser);
+
+        var token = signInService.login(new SignInRequestDTO(requestDTO.nickname(), requestDTO.password()));
+        var response = new SignUpResponseDTO(basicUser, token.token());
+        return ResponseEntity.created(uri).body(response);
     }
 
 

@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Infra.DataLoader;
 
 import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
+import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import com.RESTful_API.BirdRed.Repositories.RolesRepository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +19,14 @@ public class RolesDataLoader implements CommandLineRunner {
         saveRole();
     }
     private void saveRole(){
-        rolesRepository.save(new Role(1L));
-        rolesRepository.save(new Role(2L));
+        rolesRepository.findByName(UserRoles.ADMIN)
+                .ifPresentOrElse(
+                        role -> System.out.println("Registered roles!"),
+                        ()-> {
+                            rolesRepository.save(new Role(1L));
+                            rolesRepository.save(new Role(2L));
+                        }
+                );
     }
+
 }
