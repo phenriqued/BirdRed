@@ -1,10 +1,10 @@
 package com.RESTful_API.BirdRed.Controllers.AuthenticationController;
 
 
-import com.RESTful_API.BirdRed.DTOs.SignInDTOs.SignInRequestDTO;
-import com.RESTful_API.BirdRed.DTOs.SignInDTOs.SignInResponseDTO;
-import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpRequestDTO;
-import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpResponseDTO;
+import com.RESTful_API.BirdRed.DTOs.SignIn.SignInRequestDTO;
+import com.RESTful_API.BirdRed.DTOs.SignIn.SignInResponseDTO;
+import com.RESTful_API.BirdRed.DTOs.SignUp.SignUpRequestDTO;
+import com.RESTful_API.BirdRed.DTOs.SignUp.SignUpResponseDTO;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignIn.SignInService;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignUp.SignUpService;
 import jakarta.validation.Valid;

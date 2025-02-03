@@ -1,4 +1,4 @@
-package com.RESTful_API.BirdRed.DTOs.SignInDTOs;
+package com.RESTful_API.BirdRed.DTOs.SignIn;
 
 public record SignInResponseDTO(String token) {
 }

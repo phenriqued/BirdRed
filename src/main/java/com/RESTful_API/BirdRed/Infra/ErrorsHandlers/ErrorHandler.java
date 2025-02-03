@@ -2,6 +2,7 @@ package com.RESTful_API.BirdRed.Infra.ErrorsHandlers;
 
 
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
+import com.mongodb.MongoWriteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,6 +28,11 @@ public class ErrorHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity handlerBadCredentials(BadCredentialsException exception){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("user or password is invalid!");
+    }
+
+    @ExceptionHandler(MongoWriteException.class)
+    public ResponseEntity mongoException(MongoWriteException exception){
+        return ResponseEntity.badRequest().body("nickname or email already exists");
     }
 
 

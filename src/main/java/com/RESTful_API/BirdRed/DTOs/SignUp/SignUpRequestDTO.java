@@ -1,4 +1,4 @@
-package com.RESTful_API.BirdRed.DTOs.SignUpDTOs;
+package com.RESTful_API.BirdRed.DTOs.SignUp;
 
 
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;

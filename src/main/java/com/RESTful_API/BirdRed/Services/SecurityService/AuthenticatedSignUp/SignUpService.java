@@ -1,8 +1,7 @@
 package com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignUp;
 
 
-import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpRequestDTO;
-import com.RESTful_API.BirdRed.DTOs.SignUpDTOs.SignUpResponseDTO;
+import com.RESTful_API.BirdRed.DTOs.SignUp.SignUpRequestDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;

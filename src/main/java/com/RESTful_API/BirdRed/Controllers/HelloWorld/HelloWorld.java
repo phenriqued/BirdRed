@@ -14,6 +14,4 @@ public class HelloWorld {
     public ResponseEntity<String> helloWorld(){
         return ResponseEntity.ok().body("Hello \n \uD83D\uDC26");
     }
-
-
 }

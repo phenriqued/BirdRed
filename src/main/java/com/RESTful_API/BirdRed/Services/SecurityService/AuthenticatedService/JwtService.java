@@ -25,7 +25,7 @@ public class JwtService {
         String scope = authentication
                 .getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(""));
+                .collect(Collectors.joining(" "));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("BirdRed")
@@ -39,5 +39,4 @@ public class JwtService {
                 JwtEncoderParameters.from(claims))
                 .getTokenValue();
     }
-
 }

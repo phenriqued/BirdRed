@@ -35,8 +35,6 @@ public class SecurityConfiguration {
     @Value("${jwt.private.key}")
     private RSAPrivateKey priv;
 
-
-
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
@@ -44,7 +42,8 @@ public class SecurityConfiguration {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/authentication/***").permitAll()
+                                .requestMatchers("/authentication/**").permitAll()
+                                .requestMatchers("/admin/**").hasAuthority("SCOPE_ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -58,12 +57,14 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
-
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(pub).build();
-
     }
 
     @Bean
@@ -71,11 +72,6 @@ public class SecurityConfiguration {
         JWK jwk = new RSAKey.Builder(this.pub).privateKey(this.priv).build();
         var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
     }
 
 }
