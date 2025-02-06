@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignInService {
@@ -18,7 +19,7 @@ public class SignInService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
+    @Transactional
     public SignInResponseDTO login(SignInRequestDTO userRequest){
         var tokenAuthenticate = new UsernamePasswordAuthenticationToken(userRequest.identify(), userRequest.password());
         var authentication = authenticationManager.authenticate(tokenAuthenticate);

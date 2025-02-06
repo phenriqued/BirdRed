@@ -34,6 +34,11 @@ public class ErrorHandler {
     public ResponseEntity mongoException(MongoWriteException exception){
         return ResponseEntity.badRequest().body("nickname or email already exists");
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        System.out.println("🚨 Exception caught: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal ERROR: " + e.getMessage());
+    }
 
 
 

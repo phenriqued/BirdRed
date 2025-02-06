@@ -11,6 +11,7 @@ import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SignUpService {
@@ -22,6 +23,7 @@ public class SignUpService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    @Transactional
     public User createBasicUser(SignUpRequestDTO requestDTO){
         Role basicRole = roleRepository.findByName(UserRoles.CUSTOMER)
                 .orElseThrow(() -> new ValidationException("Role not found!"));
