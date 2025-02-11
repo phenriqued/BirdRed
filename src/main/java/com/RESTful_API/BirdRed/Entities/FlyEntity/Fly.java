@@ -6,6 +6,7 @@ import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -21,6 +22,7 @@ public class Fly {
 
     @Id
     private String id;
+    @Setter
     private String content;
     @DocumentReference
     private User author;
@@ -28,6 +30,7 @@ public class Fly {
 
 
     private LocalDateTime createdAt;
+    @Setter
     private LocalDateTime updatedAt;
 
     public Fly(CreateFlyDTO dto) {

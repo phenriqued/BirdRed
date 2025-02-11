@@ -22,12 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(identifier.contains("@")){
             return userRepository.findByEmail(identifier).map(UserAuthentication::new)
                     .orElseThrow(
-                            () -> new BadCredentialsException("")
+                            () -> new BadCredentialsException("user or password is invalid!")
                     );
         }else{
             return userRepository.findByNickname(identifier).map(UserAuthentication::new)
                     .orElseThrow(
-                            () -> new BadCredentialsException("")
+                            () -> new BadCredentialsException("user or password is invalid!")
                     );
         }
     }

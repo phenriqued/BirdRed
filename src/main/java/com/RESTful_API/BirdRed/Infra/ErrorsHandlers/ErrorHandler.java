@@ -27,7 +27,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity handlerBadCredentials(BadCredentialsException exception){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("user or password is invalid!");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 
     @ExceptionHandler(MongoWriteException.class)

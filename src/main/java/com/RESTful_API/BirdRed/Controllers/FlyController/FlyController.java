@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Controllers.FlyController;
 
 
+import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.Fly.RequestFlyDTO;
 import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyService;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/Fly")
 public class FlyController {
-
-
     @Autowired
     private FlyService service;
 
@@ -28,7 +27,15 @@ public class FlyController {
 
     @GetMapping("/{identify}")
     public ResponseEntity<ResponseGetFlyDTO> getFlysByUser(@PathVariable("identify") String identify,
-                                                                                @PageableDefault(size = 5) Pageable pageable){
+                                                                                @PageableDefault(size = 10) Pageable pageable){
         return ResponseEntity.ok().body(service.getFlysByUser(identify, pageable));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FlyDTO> updateFly(@RequestBody RequestFlyDTO dto, @PathVariable("id") String id,
+                                            JwtAuthenticationToken token){
+        return ResponseEntity.ok().body(service.updateUserFly(token, dto, id));
+
+    }
+
 }
