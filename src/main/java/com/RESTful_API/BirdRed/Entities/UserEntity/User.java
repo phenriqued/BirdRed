@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Entities.UserEntity;
 
 
+import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,9 +12,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "User")
-
 
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -30,6 +31,9 @@ public class User {
     private String email;
     @Setter
     private String password;
+
+    private List<Fly> flys;
+
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
