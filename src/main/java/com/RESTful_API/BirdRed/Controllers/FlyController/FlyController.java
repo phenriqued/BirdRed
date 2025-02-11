@@ -2,9 +2,12 @@ package com.RESTful_API.BirdRed.Controllers.FlyController;
 
 
 import com.RESTful_API.BirdRed.DTOs.Fly.RequestFlyDTO;
+import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -23,4 +26,9 @@ public class FlyController {
         return ResponseEntity.ok().body(service.createFly(requestDTO, token));
     }
 
+    @GetMapping("/{identify}")
+    public ResponseEntity<ResponseGetFlyDTO> getFlysByUser(@PathVariable("identify") String identify,
+                                                                                @PageableDefault(size = 5) Pageable pageable){
+        return ResponseEntity.ok().body(service.getFlysByUser(identify, pageable));
+    }
 }
