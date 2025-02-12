@@ -4,6 +4,8 @@ package com.RESTful_API.BirdRed.Services.UserService;
 import com.RESTful_API.BirdRed.DTOs.UserAdmin.ListUserDTO;
 import com.RESTful_API.BirdRed.DTOs.UserAdmin.UserResponseDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
+import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
+import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,9 @@ public class UserAdminService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FlyRepository flyRepository;
 
     public List<ListUserDTO> listUsers(Pageable pageable){
         return
@@ -35,5 +40,10 @@ public class UserAdminService {
                         .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
 
-
+    public void deleteAnyFly(String id) {
+        if(!flyRepository.existsById(id)){
+            throw new ValidationException("Fly not found. Check post ID!");
+        }
+        flyRepository.deleteById(id);
+    }
 }
