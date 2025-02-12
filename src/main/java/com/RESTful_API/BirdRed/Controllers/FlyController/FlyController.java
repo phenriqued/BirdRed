@@ -25,10 +25,14 @@ public class FlyController {
         return ResponseEntity.ok().body(service.createFly(requestDTO, token));
     }
 
-    @GetMapping("/{identify}")
+    @GetMapping("/listAll/{identify}")
     public ResponseEntity<ResponseGetFlyDTO> getFlysByUser(@PathVariable("identify") String identify,
                                                                                 @PageableDefault(size = 10) Pageable pageable){
         return ResponseEntity.ok().body(service.getFlysByUser(identify, pageable));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<FlyDTO> getFly(@PathVariable("id") String id){
+        return ResponseEntity.ok().body(service.getFlybyUser(id));
     }
 
     @PutMapping("/{id}")

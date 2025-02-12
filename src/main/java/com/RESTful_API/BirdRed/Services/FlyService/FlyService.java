@@ -49,6 +49,11 @@ public class FlyService {
 
         return new ResponseGetFlyDTO(user.getNickname(), flys);
     }
+    public FlyDTO getFlybyUser(String id) {
+        var fly = repository.findById(id).
+                        orElseThrow(() -> new ValidationException("Fly not found!"));
+        return new FlyDTO(fly);
+    }
 
     public FlyDTO updateUserFly(JwtAuthenticationToken token, RequestFlyDTO dto, String id) {
         Fly userFly = repository.findById(id)
@@ -76,4 +81,6 @@ public class FlyService {
         return userRepository.findByNickname(name)
                 .orElseThrow(() -> new ValidationException("User not exist!"));
     }
+
+
 }
