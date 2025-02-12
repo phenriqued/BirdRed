@@ -1,4 +1,4 @@
-package com.RESTful_API.BirdRed.Services.UserService;
+package com.RESTful_API.BirdRed.Services.UserService.Admin;
 
 
 import com.RESTful_API.BirdRed.DTOs.UserAdmin.ListUserDTO;
@@ -9,7 +9,6 @@ import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
