@@ -39,7 +39,7 @@ public class AuthenticationController {
     public ResponseEntity<SignUpResponseDTO> signUp(@RequestBody @Valid SignUpRequestDTO requestDTO, UriComponentsBuilder uriBuilder){
         var basicUser = signUpService.createBasicUser(requestDTO);
 
-        URI uri = uriBuilder.path("/BirdRed/{nickname}").buildAndExpand(basicUser.getNickname()).toUri();
+        URI uri = uriBuilder.path("/{nickname}").buildAndExpand(basicUser.getNickname()).toUri();
 
         var token = signInService.login(new SignInRequestDTO(requestDTO.nickname(), requestDTO.password()));
         var response = new SignUpResponseDTO(basicUser, token.token());

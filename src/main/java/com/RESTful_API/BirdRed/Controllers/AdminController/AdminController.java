@@ -27,8 +27,9 @@ public class AdminController {
     }
 
     @GetMapping("/list-user/{identify}")
-    public ResponseEntity<UserResponseDTO> findUser(@PathVariable("identify") String identify){
-        return ResponseEntity.ok().body(adminService.findUser(identify));
+    public ResponseEntity<UserResponseDTO> findUser(@PathVariable("identify") String identify,
+                                                        @PageableDefault(size = 10, sort = "createdAt") Pageable pageable){
+        return ResponseEntity.ok().body(adminService.findUser(identify, pageable));
     }
 
     @DeleteMapping("/Fly/{id}")
