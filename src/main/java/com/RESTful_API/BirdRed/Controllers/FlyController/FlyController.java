@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,12 @@ public class FlyController {
                                             JwtAuthenticationToken token){
         return ResponseEntity.ok().body(service.updateUserFly(token, dto, id));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteFly(@PathVariable() String id, JwtAuthenticationToken token){
+        service.deleteFly(id, token);
+        return ResponseEntity.noContent().build();
     }
 
 }

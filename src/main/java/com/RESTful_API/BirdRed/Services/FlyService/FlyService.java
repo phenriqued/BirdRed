@@ -59,17 +59,37 @@ public class FlyService {
         Fly userFly = repository.findById(id)
                                     .orElseThrow(() -> new ValidationException("FLY ID does not exist!"));
         var user = findUser(token.getName());
-        if(!userFly.getAuthor().getId().equals(user.getId())){
-            throw new BadCredentialsException("[ERROR]: Unable to update Fly: User is not the author");
-        }
-        validationTime(userFly);
+
+        validateUserFlyOwnership(user, userFly, "Unable to update Fly: User is not the author");
+        validateFlyTime(userFly);
 
         userFly.setContent(dto.content());
         userFly.setUpdatedAt(LocalDateTime.now());
         repository.save(userFly);
         return new FlyDTO(userFly);
     }
-    private void validationTime(Fly fly){
+
+    public void deleteFly(String id, JwtAuthenticationToken token) {
+        Fly userFly = repository.findById(id)
+                .orElseThrow(() -> new ValidationException("FLY ID does not exist!"));
+        var user = findUser(token.getName());
+
+        validateUserFlyOwnership(user, userFly, "Unable to DELETE Fly: User is not the author");
+
+        repository.deleteById(id);
+    }
+
+    private User findUser(String name){
+        return userRepository.findByNickname(name)
+                .orElseThrow(() -> new ValidationException("User not exist!"));
+    }
+
+    private void validateUserFlyOwnership(User user, Fly userFly, String exceptionMessage){
+        if(!userFly.getAuthor().getId().equals(user.getId()))
+            throw new BadCredentialsException(exceptionMessage);
+    }
+
+    private void validateFlyTime(Fly fly){
         var timeValidation = fly.getCreatedAt().plusMinutes(30);
         var timeNow = LocalDateTime.now();
         if(timeNow.isAfter(timeValidation)){
@@ -77,10 +97,6 @@ public class FlyService {
         }
     }
 
-    private User findUser(String name){
-        return userRepository.findByNickname(name)
-                .orElseThrow(() -> new ValidationException("User not exist!"));
-    }
 
 
 }
