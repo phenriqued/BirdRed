@@ -1,8 +1,8 @@
 package com.RESTful_API.BirdRed.Controllers.AdminController;
 
 
-import com.RESTful_API.BirdRed.DTOs.UserAdmin.ListUserDTO;
-import com.RESTful_API.BirdRed.DTOs.UserAdmin.UserResponseDTO;
+import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
+import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Services.UserService.Admin.UserAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

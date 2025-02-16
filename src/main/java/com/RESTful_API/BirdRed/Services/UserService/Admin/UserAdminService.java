@@ -2,9 +2,8 @@ package com.RESTful_API.BirdRed.Services.UserService.Admin;
 
 
 import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
-import com.RESTful_API.BirdRed.DTOs.UserAdmin.ListUserDTO;
-import com.RESTful_API.BirdRed.DTOs.UserAdmin.UserResponseDTO;
-import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
+import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
+import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;

@@ -1,4 +1,4 @@
-package com.RESTful_API.BirdRed.DTOs.UserAdmin;
+package com.RESTful_API.BirdRed.DTOs.User;
 
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 
