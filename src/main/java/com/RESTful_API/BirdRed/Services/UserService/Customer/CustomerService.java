@@ -3,6 +3,7 @@ package com.RESTful_API.BirdRed.Services.UserService.Customer;
 import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
+import com.RESTful_API.BirdRed.Entities.UserEntity.UpdateUserValidator;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
@@ -22,9 +23,10 @@ public class CustomerService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private FlyRepository flyRepository;
+    @Autowired
+    private UpdateUserValidator userValidator;
 
 
     public UserResponseDTO getUserCustomer(String nickname, Pageable pageable) {
@@ -43,37 +45,12 @@ public class CustomerService {
     public void updateUser(String nickname, RequestUpdateUserDTO dto, JwtAuthenticationToken token) {
         User user = userRepository.findByNickname(token.getName())
                                                         .orElseThrow(() -> new BadCredentialsException("User not found!"));
-        validateUserTokenOwnership(user, nickname);
-        updateTime(user, dto);
+
+        userValidator.validateUserTokenOwnership(user, nickname);
+        userValidator.updateTime(user, dto);
         user.setUpdateUser(dto);
 
         userRepository.save(user);
     }
-
-    private void updateTime(User user, RequestUpdateUserDTO updateDTO) {
-        if(updateDTO.nickname() != null){
-            verifyTimeToUpdate(user);
-        }
-    }
-
-    private void verifyTimeToUpdate(User user) {
-        if(user.getUpdatedAt() != null){
-            var timeToUpdate = user.getUpdatedAt().plusDays(30L);
-            if(LocalDateTime.now().isBefore(timeToUpdate)){
-                throw new ValidationException("Its last update was on "+  user.getUpdatedAt().getMonth() +
-                                                " " + user.getUpdatedAt().getDayOfMonth() +
-                                                ", it can only be updated 30 days later");
-            }
-        }
-    }
-
-    private void validateUserTokenOwnership(User user, String nickname) {
-        User userVerification = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new ValidationException("User nickname not found!"));
-        if(!user.getId().equals(userVerification.getId())){
-            throw new ValidationException("You cannot change data that does not belong to you!!!");
-        }
-    }
-
 
 }

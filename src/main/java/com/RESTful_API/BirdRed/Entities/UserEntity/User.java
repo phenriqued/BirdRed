@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,13 +35,14 @@ public class User {
     @Setter
     private String email;
     private String password;
-
     private List<Fly> flys;
-
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
     private Role role;
+
+    @Transient
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User(String nickname, String email, String password, Role role) {
         this.nickname = nickname;
@@ -50,25 +52,7 @@ public class User {
         this.role = role;
     }
 
-    public void setUpdateUser(RequestUpdateUserDTO updateUserDTO){
-        if(updateUserDTO != null){
-            setIfNotEmptyAndEqual(this.nickname, updateUserDTO.nickname(), this::setNickname);
-            setIfNotEmptyAndEqual(this.email, updateUserDTO.email(), this::setEmail);
-            setPassword(updateUserDTO.password());
-            setUpdatedAt(LocalDateTime.now());
-        }
-    }
-
-    private void setIfNotEmptyAndEqual(String value , String  newData, Consumer<String> setter){
-        if(newData != null && !newData.isEmpty()){
-            if(newData.equals(value)){
-                throw new ValidationException("Unable to update: identical data");
-            }
-            setter.accept(newData);
-        }
-    }
     private void setPassword(String password){
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if(password != null) {
             if (password.isEmpty() || passwordEncoder.matches(password, this.password) ) {
                 throw new ValidationException("Cannot update password");
@@ -83,5 +67,22 @@ public class User {
         this.nickname = nickname;
     }
 
+
+    public void setUpdateUser(RequestUpdateUserDTO updateUserDTO){
+        if(updateUserDTO != null){
+            setIfNotEmptyAndEqual(this.nickname, updateUserDTO.nickname(), this::setNickname);
+            setIfNotEmptyAndEqual(this.email, updateUserDTO.email(), this::setEmail);
+            setPassword(updateUserDTO.password());
+            setUpdatedAt(LocalDateTime.now());
+        }
+    }
+
+    private void setIfNotEmptyAndEqual(String value , String  newData, Consumer<String> setter){
+        if(newData != null && !newData.isEmpty() && !newData.equals(value)) {
+            setter.accept(newData);
+        } else if (newData != null && newData.equals(value)) {
+            throw new ValidationException("Unable to update: identical data");
+        }
+    }
 
 }
