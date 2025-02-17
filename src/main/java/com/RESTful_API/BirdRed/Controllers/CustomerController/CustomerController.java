@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Controllers.CustomerController;
 
 
+import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Services.UserService.Customer.CustomerService;
@@ -31,6 +32,14 @@ public class CustomerController {
                                                  JwtAuthenticationToken token){
         customerService.updateUser(nickname, dto, token);
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{nickname}")
+    public ResponseEntity<HttpStatus> deleteCustomerUser(@PathVariable("nickname") String nickname,
+                                                         @RequestBody RequestDeleteUserDTO deleteUserDTO,
+                                                         JwtAuthenticationToken token){
+        customerService.disableUser(nickname, deleteUserDTO, token);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -36,6 +36,7 @@ public class User {
     private String email;
     private String password;
     private List<Fly> flys;
+    private Boolean isActive;
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
@@ -50,11 +51,12 @@ public class User {
         this.password = password;
         this.createdAt = LocalDateTime.now();
         this.role = role;
+        this.isActive = true;
     }
 
     private void setPassword(String password){
         if(password != null) {
-            if (password.isEmpty() || passwordEncoder.matches(password, this.password) ) {
+            if (password.isEmpty() || passwordValidator(password)) {
                 throw new ValidationException("Cannot update password");
             }
             this.password = passwordEncoder.encode(password);
@@ -67,6 +69,13 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void updateIsActive() {
+        this.isActive = !this.isActive;
+    }
+
+    protected Boolean passwordValidator(String password){
+        return passwordEncoder.matches(password, this.password);
+    }
 
     public void setUpdateUser(RequestUpdateUserDTO updateUserDTO){
         if(updateUserDTO != null){
