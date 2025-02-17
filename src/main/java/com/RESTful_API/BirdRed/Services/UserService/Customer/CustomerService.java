@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,14 +39,32 @@ public class CustomerService {
         return new UserResponseDTO(user, flys);
     }
 
+    @Transactional
     public void updateUser(String nickname, RequestUpdateUserDTO dto, JwtAuthenticationToken token) {
         User user = userRepository.findByNickname(token.getName())
                                                         .orElseThrow(() -> new BadCredentialsException("User not found!"));
         validateUserTokenOwnership(user, nickname);
-
+        updateTime(user, dto);
         user.setUpdateUser(dto);
 
         userRepository.save(user);
+    }
+
+    private void updateTime(User user, RequestUpdateUserDTO updateDTO) {
+        if(updateDTO.nickname() != null){
+            verifyTimeToUpdate(user);
+        }
+    }
+
+    private void verifyTimeToUpdate(User user) {
+        if(user.getUpdatedAt() != null){
+            var timeToUpdate = user.getUpdatedAt().plusDays(30L);
+            if(LocalDateTime.now().isBefore(timeToUpdate)){
+                throw new ValidationException("Its last update was on "+  user.getUpdatedAt().getMonth() +
+                                                " " + user.getUpdatedAt().getDayOfMonth() +
+                                                ", it can only be updated 30 days later");
+            }
+        }
     }
 
     private void validateUserTokenOwnership(User user, String nickname) {
