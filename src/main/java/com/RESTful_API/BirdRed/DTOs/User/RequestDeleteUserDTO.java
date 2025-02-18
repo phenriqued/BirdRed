@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 public record RequestDeleteUserDTO(
         @NotBlank
         @PasswordValid
-        String password
+        String password,
+        boolean deleteAccount
 ) {
 }

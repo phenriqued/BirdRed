@@ -8,6 +8,8 @@ import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.TypeFly;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
+import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
+import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
@@ -30,9 +32,15 @@ public class FlyService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserValidator userValidator;
+
+    @Autowired
+    private FlyValidation flyValidation;
+
     @Transactional
     public RequestFlyDTO createFly(RequestFlyDTO requestDTO, JwtAuthenticationToken token) {
-        var user = findUser(token.getName());
+        var user = userValidator.findUserActive(token.getName());
         repository.save(new Fly(new CreateFlyDTO(requestDTO.content(), user, TypeFly.ORIGINAL)));
         return requestDTO;
     }
@@ -42,26 +50,27 @@ public class FlyService {
             throw new ValidationException("it is necessary to use the user's nickname");
         }
 
-        var user = findUser(identify);
+        var user = userValidator.findUserActive(identify);;
 
-        List<FlyDTO> flys = repository.findByAuthor(user, pageable).stream()
-                .map(FlyDTO::new).toList();
+        List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
 
         return new ResponseGetFlyDTO(user.getNickname(), flys);
     }
     public FlyDTO getFlybyUser(String id) {
-        var fly = repository.findById(id).
-                        orElseThrow(() -> new ValidationException("Fly not found!"));
+        var fly = flyValidation.findById(id);
+
+        if(!fly.getAuthor().getIsActive()){
+            throw new ValidationException("Author is disable");
+        }
         return new FlyDTO(fly);
     }
 
     public FlyDTO updateUserFly(JwtAuthenticationToken token, RequestFlyDTO dto, String id) {
-        Fly userFly = repository.findById(id)
-                                    .orElseThrow(() -> new ValidationException("FLY ID does not exist!"));
-        var user = findUser(token.getName());
+        Fly userFly = flyValidation.findById(id);
+        var user = userValidator.findUserActive(token.getName());
 
-        validateUserFlyOwnership(user, userFly, "Unable to update Fly: User is not the author");
-        validateFlyTime(userFly);
+        flyValidation.validateUserFlyOwnership(user, userFly, "Unable to update Fly: User is not the author");
+        flyValidation.validateFlyTime(userFly);
 
         userFly.setContent(dto.content());
         userFly.setUpdatedAt(LocalDateTime.now());
@@ -70,31 +79,12 @@ public class FlyService {
     }
 
     public void deleteFly(String id, JwtAuthenticationToken token) {
-        Fly userFly = repository.findById(id)
-                .orElseThrow(() -> new ValidationException("FLY ID does not exist!"));
-        var user = findUser(token.getName());
+        Fly userFly = flyValidation.findById(id);
+        var user = userValidator.findUserActive(token.getName());
 
-        validateUserFlyOwnership(user, userFly, "Unable to DELETE Fly: User is not the author");
+        flyValidation.validateUserFlyOwnership(user, userFly, "Unable to DELETE Fly: User is not the author");
 
         repository.deleteById(id);
-    }
-
-    private User findUser(String name){
-        return userRepository.findByNickname(name)
-                .orElseThrow(() -> new ValidationException("User not exist!"));
-    }
-
-    private void validateUserFlyOwnership(User user, Fly userFly, String exceptionMessage){
-        if(!userFly.getAuthor().getId().equals(user.getId()))
-            throw new BadCredentialsException(exceptionMessage);
-    }
-
-    private void validateFlyTime(Fly fly){
-        var timeValidation = fly.getCreatedAt().plusMinutes(30);
-        var timeNow = LocalDateTime.now();
-        if(timeNow.isAfter(timeValidation)){
-            throw new ValidationException("Unable to update Fly: Time limit exceeded");
-        }
     }
 
 

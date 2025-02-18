@@ -5,7 +5,7 @@ import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
-import com.RESTful_API.BirdRed.Entities.UserEntity.UserValidator;
+import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
@@ -34,7 +34,7 @@ public class UserAdminService {
     }
 
     public UserResponseDTO findUser(String identify, Pageable pageable){
-        var user = userValidator.findUser(identify);
+        var user = userValidator.findUserActive(identify);
 
         List<FlyDTO> flys = flyRepository.findByAuthor(user, pageable).stream()
                 .map(FlyDTO::new).toList();

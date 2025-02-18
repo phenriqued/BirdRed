@@ -1,6 +1,7 @@
-package com.RESTful_API.BirdRed.Entities.UserEntity;
+package com.RESTful_API.BirdRed.Services.UserService.UserValidator;
 
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
+import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,14 @@ public class UserValidator {
         return identify.contains("@")
                 ? userRepository.findByEmail(identify).orElseThrow(() -> new UsernameNotFoundException("User is invalid!"))
                 : userRepository.findByNickname(identify).orElseThrow(() -> new UsernameNotFoundException("User is invalid!"));
+    }
+
+    public User findUserActive(String identify){
+        return identify.contains("@")
+                ? userRepository.findByEmailAndIsActiveIsTrue(identify)
+                                            .orElseThrow(() -> new ValidationException("User not Found!"))
+                : userRepository.findByNicknameAndIsActiveIsTrue(identify)
+                                            .orElseThrow(() -> new ValidationException("User not Found!"));
     }
 
 }

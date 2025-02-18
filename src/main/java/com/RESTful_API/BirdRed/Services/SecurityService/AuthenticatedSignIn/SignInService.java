@@ -3,7 +3,7 @@ package com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignIn;
 
 import com.RESTful_API.BirdRed.DTOs.SignIn.SignInRequestDTO;
 import com.RESTful_API.BirdRed.DTOs.SignIn.SignInResponseDTO;
-import com.RESTful_API.BirdRed.Entities.UserEntity.UserValidator;
+import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedService.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

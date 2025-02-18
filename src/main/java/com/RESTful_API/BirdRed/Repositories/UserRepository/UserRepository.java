@@ -16,8 +16,12 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
 
-    @Query("{ 'role.name' : ?0 }")
+    @Query("{ 'role.name' : ?0, 'isActive' : true}")
     Page<User> findByRole(UserRoles role, Pageable pageable);
+
+    Optional<User> findByNicknameAndIsActiveIsTrue(String nickname);
+
+    Optional<User> findByEmailAndIsActiveIsTrue(String email);
 
 
 }

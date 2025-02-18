@@ -73,7 +73,7 @@ public class User {
         this.isActive = !this.isActive;
     }
 
-    protected Boolean passwordValidator(String password){
+    public Boolean passwordValidator(String password){
         return passwordEncoder.matches(password, this.password);
     }
 

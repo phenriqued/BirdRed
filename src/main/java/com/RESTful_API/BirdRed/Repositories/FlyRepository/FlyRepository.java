@@ -13,4 +13,6 @@ public interface FlyRepository extends MongoRepository<Fly, String> {
 
     Page<Fly> findByAuthor(User author, Pageable pageable);
 
+    void deleteAllByAuthor(User user);
+
 }

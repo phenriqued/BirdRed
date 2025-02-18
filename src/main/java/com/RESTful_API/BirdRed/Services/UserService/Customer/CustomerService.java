@@ -4,14 +4,14 @@ import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
-import com.RESTful_API.BirdRed.Entities.UserEntity.UserValidator;
+import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
+import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
 import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +27,24 @@ public class CustomerService {
     private FlyRepository flyRepository;
     @Autowired
     private UserValidator userValidator;
+    @Autowired
+    private FlyValidation flyValidation;
+
 
 
     public UserResponseDTO getUserCustomer(String nickname, Pageable pageable) {
         if(nickname.contains("@")){
             throw new ValidationException("User cannot found: Use the user's nickname.");
         }
-        var user = findUserByNickname(nickname);
-        List<FlyDTO> flys = flyRepository.findByAuthor(user, pageable).stream()
-                                .map(FlyDTO::new).toList();
+        var user = userValidator.findUserActive(nickname);
+        List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
 
         return new UserResponseDTO(user, flys);
     }
 
     @Transactional
     public void updateUser(String nickname, RequestUpdateUserDTO dto, JwtAuthenticationToken token) {
-        User user = findUserByNickname(token.getName());
+        User user = userValidator.findUserActive(token.getName());
 
         userValidator.validateUserTokenOwnership(user, nickname);
         userValidator.updateTime(user, dto);
@@ -52,17 +54,18 @@ public class CustomerService {
     }
 
     public void disableUser(String nickname, RequestDeleteUserDTO deleteUserDTO, JwtAuthenticationToken token) {
-        User user = findUserByNickname(token.getName());
+        User user = userValidator.findUserActive(token.getName());
 
         userValidator.validateUserTokenOwnership(user, nickname);
         userValidator.passwordValidation(user, deleteUserDTO.password());
 
-        user.updateIsActive();
-        userRepository.save(user);
+        if(deleteUserDTO.deleteAccount()){
+            flyValidation.deleteAllFlyByAuthor(user);
+            userRepository.deleteById(user.getId());
+        }else{
+            user.updateIsActive();
+            userRepository.save(user);
+        }
     }
 
-    private User findUserByNickname(String nickname){
-        return userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new BadCredentialsException("User not found!"));
-    }
 }
