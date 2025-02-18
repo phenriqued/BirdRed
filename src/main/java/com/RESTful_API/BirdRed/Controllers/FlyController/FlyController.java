@@ -2,6 +2,7 @@ package com.RESTful_API.BirdRed.Controllers.FlyController;
 
 
 import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
+import com.RESTful_API.BirdRed.DTOs.Fly.ReflyDTO;
 import com.RESTful_API.BirdRed.DTOs.Fly.RequestFlyDTO;
 import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyService;
@@ -25,6 +26,12 @@ public class FlyController {
                                                    JwtAuthenticationToken token){
         return ResponseEntity.ok().body(service.createFly(requestDTO, token));
     }
+    @PostMapping("/{id}")
+    public ResponseEntity<ReflyDTO> createReFly(@PathVariable("id") String id, @RequestBody @Valid RequestFlyDTO requestDTO,
+                                                JwtAuthenticationToken token){
+        return ResponseEntity.ok().body(service.createRefly(id, requestDTO, token));
+    }
+
 
     @GetMapping("/listAll/{identify}")
     public ResponseEntity<ResponseGetFlyDTO> getFlysByUser(@PathVariable("identify") String identify,

@@ -3,11 +3,14 @@ package com.RESTful_API.BirdRed.Entities.FlyEntity;
 
 import com.RESTful_API.BirdRed.DTOs.Fly.CreateFlyDTO;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -18,6 +21,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Fly.class, name = "FLY"),
+        @JsonSubTypes.Type(value = ReFly.class, name = "REFLY")
+})
 public class Fly {
 
     @Id

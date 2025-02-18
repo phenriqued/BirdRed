@@ -1,21 +1,16 @@
 package com.RESTful_API.BirdRed.Services.FlyService;
 
 
-import com.RESTful_API.BirdRed.DTOs.Fly.CreateFlyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.RequestFlyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
+import com.RESTful_API.BirdRed.DTOs.Fly.*;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
+import com.RESTful_API.BirdRed.Entities.FlyEntity.ReFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.TypeFly;
-import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
-import com.RESTful_API.BirdRed.Repositories.UserRepository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,15 +37,21 @@ public class FlyService {
         return requestDTO;
     }
 
+    public ReflyDTO createRefly(String postId, RequestFlyDTO requestFlyDTO, JwtAuthenticationToken token){
+        var user = userValidator.findUserActive(token.getName());
+        var fly = flyValidation.findById(postId);
+        if(fly.getAuthor().getId().equals(user.getId())){
+            throw new ValidationException("It is not possible to share the post itself");
+        }
+        repository.save(new ReFly(user, fly, requestFlyDTO.content()));
+        return new ReflyDTO(requestFlyDTO.content(), new FlyDTO(fly));
+    }
     public ResponseGetFlyDTO getFlysByUser(String identify, Pageable pageable) {
         if(identify.contains("@")){
             throw new ValidationException("it is necessary to use the user's nickname");
         }
-
         var user = userValidator.findUserActive(identify);;
-
         List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
-
         return new ResponseGetFlyDTO(user.getNickname(), flys);
     }
     public FlyDTO getFlybyUser(String id) {
@@ -62,6 +63,7 @@ public class FlyService {
         return new FlyDTO(fly);
     }
 
+    @Transactional
     public FlyDTO updateUserFly(JwtAuthenticationToken token, RequestFlyDTO dto, String id) {
         Fly userFly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
@@ -75,6 +77,7 @@ public class FlyService {
         return new FlyDTO(userFly);
     }
 
+    @Transactional
     public void deleteFly(String id, JwtAuthenticationToken token) {
         Fly userFly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
