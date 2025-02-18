@@ -2,6 +2,7 @@ package com.RESTful_API.BirdRed.Controllers.AdminController;
 
 
 import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
+import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserByAdminDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Services.UserService.Admin.UserAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,13 @@ public class AdminController {
     @DeleteMapping("/Fly/{id}")
     public ResponseEntity<HttpStatus> deleteAnyFly(@PathVariable("id") String id){
         adminService.deleteAnyFly(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{nickname}")
+    public ResponseEntity<HttpStatus> deleteAnyBasicUser(@PathVariable("nickname") String nickname, @RequestBody RequestDeleteUserByAdminDTO deleteAccount){
+        adminService.deleteUser(nickname, deleteAccount);
+        return ResponseEntity.ok().build();
     }
 
 

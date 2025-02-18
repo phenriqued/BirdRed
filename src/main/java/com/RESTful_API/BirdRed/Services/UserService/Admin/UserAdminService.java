@@ -3,8 +3,10 @@ package com.RESTful_API.BirdRed.Services.UserService.Admin;
 
 import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
+import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserByAdminDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
+import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.FlyRepository;
@@ -27,6 +29,10 @@ public class UserAdminService {
     @Autowired
     private UserValidator userValidator;
 
+    @Autowired
+    private FlyValidation flyValidation;
+
+
     public List<ListUserDTO> listUsers(Pageable pageable){
         return
                 userRepository.findByRole(UserRoles.CUSTOMER, pageable).stream()
@@ -35,9 +41,7 @@ public class UserAdminService {
 
     public UserResponseDTO findUser(String identify, Pageable pageable){
         var user = userValidator.findUserActive(identify);
-
-        List<FlyDTO> flys = flyRepository.findByAuthor(user, pageable).stream()
-                .map(FlyDTO::new).toList();
+        List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
         return new UserResponseDTO(user, flys);
     }
 
@@ -47,4 +51,17 @@ public class UserAdminService {
         }
         flyRepository.deleteById(id);
     }
+
+    public void deleteUser(String nickname, RequestDeleteUserByAdminDTO deleteAccount){
+        var user = userValidator.findUserActive(nickname);
+
+        if(deleteAccount.deleteAccount()){
+            flyValidation.deleteAllFlyByAuthor(user);
+            userRepository.deleteById(user.getId());
+        }else{
+            user.updateIsActive();
+            userRepository.save(user);
+        }
+    }
+
 }

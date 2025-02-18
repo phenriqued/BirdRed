@@ -30,9 +30,6 @@ public class FlyService {
     private FlyRepository repository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserValidator userValidator;
 
     @Autowired
