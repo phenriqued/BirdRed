@@ -1,10 +1,7 @@
 package com.RESTful_API.BirdRed.Controllers.FlyController;
 
 
-import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.ReflyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.RequestFlyDTO;
-import com.RESTful_API.BirdRed.DTOs.Fly.ResponseGetFlyDTO;
+import com.RESTful_API.BirdRed.DTOs.Fly.*;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,11 @@ public class FlyController {
         return ResponseEntity.ok().body(service.createRefly(id, requestDTO, token));
     }
 
+    @PostMapping("/{id}/comment")
+    public ResponseEntity<ResponseCommentFly> createCommentFly(@PathVariable("id") String id, @RequestBody @Valid RequestFlyDTO requestDTO,
+                                                               JwtAuthenticationToken token){
+        return ResponseEntity.ok().body(service.createCommentFly(id, requestDTO, token));
+    }
 
     @GetMapping("/listAll/{identify}")
     public ResponseEntity<ResponseGetFlyDTO> getFlysByUser(@PathVariable("identify") String identify,
@@ -39,7 +41,7 @@ public class FlyController {
         return ResponseEntity.ok().body(service.getFlysByUser(identify, pageable));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<FlyDTO> getFly(@PathVariable("id") String id){
+    public ResponseEntity<FlyCompleteDTO> getFly(@PathVariable("id") String id){
         return ResponseEntity.ok().body(service.getFlybyUser(id));
     }
 

@@ -6,6 +6,7 @@ import com.RESTful_API.BirdRed.DTOs.User.ListUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserByAdminDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.UserRoles;
+import com.RESTful_API.BirdRed.Repositories.FlyRepository.CommentsFlyRepository;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
@@ -25,6 +26,8 @@ public class UserAdminService {
 
     @Autowired
     private FlyRepository flyRepository;
+    @Autowired
+    private CommentsFlyRepository commentsFlyRepository;
 
     @Autowired
     private UserValidator userValidator;
@@ -56,6 +59,7 @@ public class UserAdminService {
         var user = userValidator.findUserActive(nickname);
 
         if(deleteAccount.deleteAccount()){
+            commentsFlyRepository.deleteAllByAuthor(user);
             flyValidation.deleteAllFlyByAuthor(user);
             userRepository.deleteById(user.getId());
         }else{

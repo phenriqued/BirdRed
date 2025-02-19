@@ -5,6 +5,7 @@ import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.RoleEntity.Role;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,7 @@ public class User {
     private LocalDateTime updatedAt;
     private Role role;
 
+    @JsonIgnore
     @Transient
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

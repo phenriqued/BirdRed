@@ -1,10 +1,8 @@
 package com.RESTful_API.BirdRed.Entities.FlyEntity;
 
 
-import com.RESTful_API.BirdRed.DTOs.Fly.CreateFlyDTO;
+import com.RESTful_API.BirdRed.DTOs.Fly.CreateCommentFlyDTO;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +13,12 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "Fly")
+@Document(collection = "CommentsFly")
 
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Fly.class, name = "FLY"),
-        @JsonSubTypes.Type(value = ReFly.class, name = "REFLY")
-})
-public class Fly {
+public class CommentsFly {
 
     @Id
     private String id;
@@ -34,17 +26,19 @@ public class Fly {
     private String content;
     @DocumentReference
     private User author;
-    private TypeFly type;
+    @DocumentReference
+    private Fly fly;
 
+    private TypeFly type;
     private LocalDateTime createdAt;
     @Setter
     private LocalDateTime updatedAt;
 
-    public Fly(CreateFlyDTO dto) {
+    public CommentsFly(CreateCommentFlyDTO dto) {
         this.content = dto.content();
         this.author = dto.author();
-        this.type = dto.typeFly();
+        this.fly = dto.fly();
+        this.type = TypeFly.COMMENT;
         this.createdAt = LocalDateTime.now();
     }
-
 }

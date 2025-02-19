@@ -2,9 +2,11 @@ package com.RESTful_API.BirdRed.Services.FlyService;
 
 
 import com.RESTful_API.BirdRed.DTOs.Fly.*;
+import com.RESTful_API.BirdRed.Entities.FlyEntity.CommentsFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.ReFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.TypeFly;
+import com.RESTful_API.BirdRed.Repositories.FlyRepository.CommentsFlyRepository;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Infra.Exceptions.ValidationException;
@@ -25,6 +27,9 @@ public class FlyService {
     private FlyRepository repository;
 
     @Autowired
+    private CommentsFlyRepository commentFlyRepository;
+
+    @Autowired
     private UserValidator userValidator;
 
     @Autowired
@@ -37,6 +42,7 @@ public class FlyService {
         return requestDTO;
     }
 
+    @Transactional
     public ReflyDTO createRefly(String postId, RequestFlyDTO requestFlyDTO, JwtAuthenticationToken token){
         var user = userValidator.findUserActive(token.getName());
         var fly = flyValidation.findById(postId);
@@ -46,6 +52,15 @@ public class FlyService {
         repository.save(new ReFly(user, fly, requestFlyDTO.content()));
         return new ReflyDTO(requestFlyDTO.content(), new FlyDTO(fly));
     }
+    @Transactional
+    public ResponseCommentFly createCommentFly(String id, RequestFlyDTO requestDTO, JwtAuthenticationToken token) {
+        var user = userValidator.findUserActive(token.getName());
+        var fly = flyValidation.findById(id);
+        var comment = commentFlyRepository.save(
+                new CommentsFly(new CreateCommentFlyDTO(requestDTO.content(), user, fly)));
+        return new ResponseCommentFly(new FlyDTO(fly),comment);
+    }
+
     public ResponseGetFlyDTO getFlysByUser(String identify, Pageable pageable) {
         if(identify.contains("@")){
             throw new ValidationException("it is necessary to use the user's nickname");
@@ -54,13 +69,15 @@ public class FlyService {
         List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
         return new ResponseGetFlyDTO(user.getNickname(), flys);
     }
-    public FlyDTO getFlybyUser(String id) {
+    public FlyCompleteDTO getFlybyUser(String id) {
         var fly = flyValidation.findById(id);
+        List<CommentFlyDTO> comments = commentFlyRepository.findByFly(fly, Pageable.unpaged()).stream()
+                .map(CommentFlyDTO::new).toList();
 
         if(!fly.getAuthor().getIsActive()){
             throw new ValidationException("Author is disable");
         }
-        return new FlyDTO(fly);
+        return new FlyCompleteDTO(fly, comments);
     }
 
     @Transactional
@@ -83,7 +100,7 @@ public class FlyService {
         var user = userValidator.findUserActive(token.getName());
 
         flyValidation.validateUserFlyOwnership(user, userFly, "Unable to DELETE Fly: User is not the author");
-
+        commentFlyRepository.deleteAllByFly(userFly);
         repository.deleteById(id);
     }
 

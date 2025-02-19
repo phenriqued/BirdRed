@@ -4,6 +4,7 @@ import com.RESTful_API.BirdRed.DTOs.Fly.FlyDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
+import com.RESTful_API.BirdRed.Repositories.FlyRepository.CommentsFlyRepository;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
 import com.RESTful_API.BirdRed.Entities.UserEntity.User;
@@ -25,6 +26,8 @@ public class CustomerService {
     private UserRepository userRepository;
     @Autowired
     private FlyRepository flyRepository;
+    @Autowired
+    private CommentsFlyRepository commentsFlyRepository;
     @Autowired
     private UserValidator userValidator;
     @Autowired
@@ -60,6 +63,7 @@ public class CustomerService {
         userValidator.passwordValidation(user, deleteUserDTO.password());
 
         if(deleteUserDTO.deleteAccount()){
+            commentsFlyRepository.deleteAllByAuthor(user);
             flyValidation.deleteAllFlyByAuthor(user);
             userRepository.deleteById(user.getId());
         }else{
