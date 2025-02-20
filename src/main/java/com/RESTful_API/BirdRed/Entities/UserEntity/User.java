@@ -36,7 +36,6 @@ public class User {
     @Setter
     private String email;
     private String password;
-    private List<Fly> flys;
     private Boolean isActive;
     private LocalDateTime createdAt;
     @Setter

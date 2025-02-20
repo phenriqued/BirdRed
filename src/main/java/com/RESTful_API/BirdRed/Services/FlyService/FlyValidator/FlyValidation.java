@@ -24,13 +24,13 @@ public class FlyValidation {
     private UserRepository userRepository;
 
 
-    public void validateUserFlyOwnership(User user, Fly userFly, String exceptionMessage){
-        if(!userFly.getAuthor().getId().equals(user.getId()))
+    public void validateUserFlyOwnership(User user, User userFly, String exceptionMessage){
+        if(!userFly.getId().equals(user.getId()))
             throw new BadCredentialsException(exceptionMessage);
     }
 
-    public void validateFlyTime(Fly fly){
-        var timeValidation = fly.getCreatedAt().plusMinutes(30);
+    public void validateFlyTime(LocalDateTime timeValidation){
+        timeValidation = timeValidation.plusMinutes(30);
         var timeNow = LocalDateTime.now();
         if(timeNow.isAfter(timeValidation)){
             throw new ValidationException("Unable to update Fly: Time limit exceeded");

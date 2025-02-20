@@ -82,16 +82,16 @@ public class FlyService {
 
     @Transactional
     public FlyDTO updateUserFly(JwtAuthenticationToken token, RequestFlyDTO dto, String id) {
-        Fly userFly = flyValidation.findById(id);
+        Fly fly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
 
-        flyValidation.validateUserFlyOwnership(user, userFly, "Unable to update Fly: User is not the author");
-        flyValidation.validateFlyTime(userFly);
+        flyValidation.validateUserFlyOwnership(user, fly.getAuthor(), "Unable to update Fly: User is not the author");
+        flyValidation.validateFlyTime(fly.getCreatedAt());
 
-        userFly.setContent(dto.content());
-        userFly.setUpdatedAt(LocalDateTime.now());
-        repository.save(userFly);
-        return new FlyDTO(userFly);
+        fly.setContent(dto.content());
+        fly.setUpdatedAt(LocalDateTime.now());
+        repository.save(fly);
+        return new FlyDTO(fly);
     }
 
     @Transactional
@@ -99,7 +99,7 @@ public class FlyService {
         Fly userFly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
 
-        flyValidation.validateUserFlyOwnership(user, userFly, "Unable to DELETE Fly: User is not the author");
+        flyValidation.validateUserFlyOwnership(user, userFly.getAuthor(), "Unable to DELETE Fly: User is not the author");
         commentFlyRepository.deleteAllByFly(userFly);
         repository.deleteById(id);
     }
