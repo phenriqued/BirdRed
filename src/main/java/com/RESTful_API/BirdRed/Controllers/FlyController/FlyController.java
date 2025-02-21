@@ -42,7 +42,7 @@ public class FlyController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<FlyCompleteDTO> getFly(@PathVariable("id") String id){
-        return ResponseEntity.ok().body(service.getFlybyUser(id));
+        return ResponseEntity.ok().body(service.getFly(id));
     }
 
     @PutMapping("/{id}")

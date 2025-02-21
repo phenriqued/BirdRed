@@ -1,5 +1,6 @@
 package com.RESTful_API.BirdRed.DTOs.Fly;
 
+import com.RESTful_API.BirdRed.Entities.FlyEntity.CommentsFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.TypeFly;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,5 +19,8 @@ public record FlyCompleteDTO(
 ) {
     public FlyCompleteDTO(Fly entity, List<CommentFlyDTO> comments){
         this(entity.getId(), entity.getContent(), entity.getType(), entity.getCreatedAt(), entity.getUpdatedAt(), comments);
+    }
+    public FlyCompleteDTO(CommentsFly entity){
+        this(entity.getId(), entity.getContent(), entity.getType(), entity.getCreatedAt(), entity.getUpdatedAt(), null);
     }
 }

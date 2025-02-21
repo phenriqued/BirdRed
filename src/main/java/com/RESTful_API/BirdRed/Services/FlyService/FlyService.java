@@ -6,6 +6,7 @@ import com.RESTful_API.BirdRed.Entities.FlyEntity.CommentsFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.ReFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.TypeFly;
+import com.RESTful_API.BirdRed.Entities.UserEntity.User;
 import com.RESTful_API.BirdRed.Repositories.FlyRepository.CommentsFlyRepository;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyValidator.FlyValidation;
 import com.RESTful_API.BirdRed.Services.UserService.UserValidator.UserValidator;
@@ -69,22 +70,35 @@ public class FlyService {
         List<FlyDTO> flys = flyValidation.findAllFlysByAuthor(user, pageable);
         return new ResponseGetFlyDTO(user.getNickname(), flys);
     }
-    public FlyCompleteDTO getFlybyUser(String id) {
+    public FlyCompleteDTO getFly(String id) {
+        if(commentFlyRepository.findById(id).isPresent()){
+            var comment = commentFlyRepository.findById(id).get();
+            authorEnable(comment.getAuthor());
+            return new FlyCompleteDTO(comment);
+        }
         var fly = flyValidation.findById(id);
         List<CommentFlyDTO> comments = commentFlyRepository.findByFly(fly, Pageable.unpaged()).stream()
                 .map(CommentFlyDTO::new).toList();
-
-        if(!fly.getAuthor().getIsActive()){
-            throw new ValidationException("Author is disable");
-        }
+        authorEnable(fly.getAuthor());
         return new FlyCompleteDTO(fly, comments);
     }
 
     @Transactional
     public FlyDTO updateUserFly(JwtAuthenticationToken token, RequestFlyDTO dto, String id) {
-        Fly fly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
 
+        if(commentFlyRepository.findById(id).isPresent()){
+            var updateComment = commentFlyRepository.findById(id).get();
+            flyValidation.validateUserFlyOwnership(user, updateComment.getAuthor(), "Unable to update Comment Fly: User is not the author");
+            flyValidation.validateFlyTime(updateComment.getCreatedAt());
+
+            updateComment.setContent(dto.content());
+            updateComment.setUpdatedAt(LocalDateTime.now());
+            commentFlyRepository.save(updateComment);
+            return new FlyDTO(updateComment);
+        }
+
+        Fly fly = flyValidation.findById(id);
         flyValidation.validateUserFlyOwnership(user, fly.getAuthor(), "Unable to update Fly: User is not the author");
         flyValidation.validateFlyTime(fly.getCreatedAt());
 
@@ -96,12 +110,24 @@ public class FlyService {
 
     @Transactional
     public void deleteFly(String id, JwtAuthenticationToken token) {
-        Fly userFly = flyValidation.findById(id);
         var user = userValidator.findUserActive(token.getName());
 
-        flyValidation.validateUserFlyOwnership(user, userFly.getAuthor(), "Unable to DELETE Fly: User is not the author");
-        commentFlyRepository.deleteAllByFly(userFly);
-        repository.deleteById(id);
+        if(commentFlyRepository.findById(id).isPresent()){
+            var deleteComment = commentFlyRepository.findById(id).get();
+            flyValidation.validateUserFlyOwnership(user, deleteComment.getAuthor(), "Unable to DELETE Fly: User is not the author");
+            commentFlyRepository.deleteById(id);
+        }else{
+            Fly userFly = flyValidation.findById(id);
+            flyValidation.validateUserFlyOwnership(user, userFly.getAuthor(), "Unable to DELETE Fly: User is not the author");
+            commentFlyRepository.deleteAllByFly(userFly);
+            repository.deleteById(id);
+        }
+    }
+
+    private void authorEnable(User user){
+        if(!user.getIsActive()){
+            throw new ValidationException("Author is disable");
+        }
     }
 
 
