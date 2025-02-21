@@ -7,7 +7,7 @@
   o objetivo é criar uma aplicação que simula uma pequena parte das funcionalidades da rede social, permitindo que os usuários:
   <ul>
     <li> Criem e publiquem posts. </li>
-    <li> Curtam, comentem e compartilhem publicações. </li>
+    <li> Comentem e compartilhem publicações. </li>
   </ul>
 </p>
 
