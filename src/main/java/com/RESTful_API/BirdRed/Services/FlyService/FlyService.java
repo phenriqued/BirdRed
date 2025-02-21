@@ -1,6 +1,7 @@
 package com.RESTful_API.BirdRed.Services.FlyService;
 
 
+import com.RESTful_API.BirdRed.DTOs.Feed.FeedDTO;
 import com.RESTful_API.BirdRed.DTOs.Fly.*;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.CommentsFly;
 import com.RESTful_API.BirdRed.Entities.FlyEntity.Fly;
@@ -60,6 +61,10 @@ public class FlyService {
         var comment = commentFlyRepository.save(
                 new CommentsFly(new CreateCommentFlyDTO(requestDTO.content(), user, fly)));
         return new ResponseCommentFly(new FlyDTO(fly),comment);
+    }
+
+    public List<FeedDTO> getFeed(Pageable pageable){
+        return repository.findAll(pageable).stream().map(FeedDTO::new).toList();
     }
 
     public ResponseGetFlyDTO getFlysByUser(String identify, Pageable pageable) {
