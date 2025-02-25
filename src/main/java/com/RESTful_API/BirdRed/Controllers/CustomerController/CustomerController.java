@@ -4,7 +4,10 @@ package com.RESTful_API.BirdRed.Controllers.CustomerController;
 import com.RESTful_API.BirdRed.DTOs.User.RequestDeleteUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.RequestUpdateUserDTO;
 import com.RESTful_API.BirdRed.DTOs.User.UserResponseDTO;
+import com.RESTful_API.BirdRed.Infra.SecurityConfig.SecurityConfiguration;
 import com.RESTful_API.BirdRed.Services.UserService.Customer.CustomerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
+@Tag(name = "User Basic Controller", description = "Responsible for editing, deleting and getting a basic user")
+@SecurityRequirement(name = SecurityConfiguration.SECURITY)
 public class CustomerController {
 
     @Autowired

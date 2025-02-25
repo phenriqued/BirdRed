@@ -2,7 +2,10 @@ package com.RESTful_API.BirdRed.Controllers.FlyController;
 
 
 import com.RESTful_API.BirdRed.DTOs.Fly.*;
+import com.RESTful_API.BirdRed.Infra.SecurityConfig.SecurityConfiguration;
 import com.RESTful_API.BirdRed.Services.FlyService.FlyService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/Fly")
+@Tag(name = "Fly Controller", description = "Responsible for creating, editing and deleting Fly-(Posts) ")
+@SecurityRequirement(name = SecurityConfiguration.SECURITY)
 public class FlyController {
     @Autowired
     private FlyService service;

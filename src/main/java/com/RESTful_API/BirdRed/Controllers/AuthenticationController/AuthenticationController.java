@@ -5,8 +5,11 @@ import com.RESTful_API.BirdRed.DTOs.SignIn.SignInRequestDTO;
 import com.RESTful_API.BirdRed.DTOs.SignIn.SignInResponseDTO;
 import com.RESTful_API.BirdRed.DTOs.SignUp.SignUpRequestDTO;
 import com.RESTful_API.BirdRed.DTOs.SignUp.SignUpResponseDTO;
+import com.RESTful_API.BirdRed.Infra.SecurityConfig.SecurityConfiguration;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignIn.SignInService;
 import com.RESTful_API.BirdRed.Services.SecurityService.AuthenticatedSignUp.SignUpService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/authentication")
+@Tag(name = "Authentication Controller", description = "Responsible for creating, logging in and authenticating users")
 public class AuthenticationController {
 
     @Autowired
